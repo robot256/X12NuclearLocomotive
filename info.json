@@ -1,0 +1,11 @@
+{
+  "name": "X12NuclearLocomotive",
+  "version": "0.0.1",
+  "title": "X-12 Nuclear Locomotive",
+  "author": "robot256",
+  "contact": "",
+  "homepage": "",
+  "description": "The X-12 Nuclear Locomotive was a real design concept in the 1950s.  It is massive, powerful, and requires the reactor-locomotive to be connected to the heat-exchanger-tender to operate.",
+  "factorio_version": "0.17",
+	"dependencies": ["base >= 0.17.62", "OpteraLib >= 0.1.3", "WagonColors >= 0.1.0", "TrainOverhaul"]
+}
