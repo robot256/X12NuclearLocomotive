@@ -62,7 +62,7 @@ local x12_train_wheels =
 
 local base_loco = data.raw["locomotive"]["locomotive"]
 
-local x12_nuclear_loco = optera_lib.copy_prototype(base_loco, "x12-nuclear-locomotive")
+local x12_nuclear_loco = optera_lib.copy_prototype(base_loco, "x12-nuclear-locomotive-powered")
 x12_nuclear_loco.icon = "__TrainOverhaul__/graphics/icons/nuclear-locomotive.png"
 x12_nuclear_loco.max_health = 3000
 x12_nuclear_loco.weight = 9000
@@ -70,7 +70,7 @@ x12_nuclear_loco.max_speed = 1.4 --302.4km/h
 --x12_nuclear_loco.max_speed = 1.2 --259.2km/h
 x12_nuclear_loco.max_power = "5000kW"
 x12_nuclear_loco.reversing_power_modifier = 1
-x12_nuclear_loco.braking_force = 45
+x12_nuclear_loco.braking_force = 40
 x12_nuclear_loco.friction_force = 0.50
 x12_nuclear_loco.air_resistance = 0.015
 x12_nuclear_loco.burner.fuel_category = "nuclear"
@@ -141,15 +141,22 @@ x12_nuclear_loco.pictures =
 
 
 
-data:extend({
-	x12_nuclear_loco
-})
+---------
+-- Now modify it for the unpowered (default) version
+local x12_nuclear_loco_unpowered = optera_lib.copy_prototype(x12_nuclear_loco, "x12-nuclear-locomotive")
 
+x12_nuclear_loco_unpowered.max_power = "0kW"
+x12_nuclear_loco_unpowered.working_sound = nil
+
+
+
+----------
+-- Create the Nuclear Tender
 local base_fluid_wagon = data.raw["fluid-wagon"]["fluid-wagon"]
 
 local x12_nuclear_tender = optera_lib.copy_prototype(base_fluid_wagon, "x12-nuclear-tender")
 x12_nuclear_tender.icon = "__TrainOverhaul__/graphics/icons/heavy-fluid-wagon.png"
-x12_nuclear_tender.color = {r = 0, g = 0.53, b = 0, a = 0.5}
+x12_nuclear_tender.color = {r = 1, g = 1, b = 1, a = 0.7}
 x12_nuclear_tender.max_health = 1500
 x12_nuclear_tender.weight = 4000
 x12_nuclear_tender.max_speed = 1.4
@@ -158,5 +165,7 @@ x12_nuclear_tender.capacity = 25000
 --x12_nuclear_tender.connection_distance = 5
 
 data:extend({
-  x12_nuclear_tender
+	x12_nuclear_loco,
+	x12_nuclear_loco_unpowered,
+	x12_nuclear_tender
 })
