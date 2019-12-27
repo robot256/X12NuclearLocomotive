@@ -1,9 +1,9 @@
---[[ Copyright (c) 2018 Optera
- * Part of Train Overhaul
- *
- * See LICENSE.md in the project directory for license information.
---]]
-
+--[[ Copyright (c) 2019 robot256 (MIT License)
+ * Project: X-12 Nuclear Locomotive
+ * File: data.lua
+ * Description: Adds prototypes for entites, items, recipes and technology.
+ --]]
+ 
 local optera_lib = require ("__OpteraLib__.data.utilities")
 
 require ("prototypes.technology")

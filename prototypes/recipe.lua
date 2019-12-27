@@ -1,8 +1,8 @@
---[[ Copyright (c) 2018 Optera
- * Part of Train Overhaul
- *
- * See LICENSE.md in the project directory for license information.
---]]
+--[[ Copyright (c) 2019 robot256 (MIT License)
+ * Project: X-12 Nuclear Locomotive
+ * File: recipe.lua
+ * Description: Adds recipe prototypes.
+ --]]
 
 
 data:extend({

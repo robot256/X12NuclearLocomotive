@@ -1,47 +1,50 @@
---[[ Copyright (c) 2018 Optera
- * Part of Train Overhaul
- *
- * See LICENSE.md in the project directory for license information.
---]]
+--[[ Copyright (c) 2019 robot256 (MIT License)
+ * Project: X-12 Nuclear Locomotive
+ * File: entity.lua
+ * Description: Adds prototypes for x12-nuclear-locomotive, x12-nuclear-locomotive-powered, and x12-nuclear-tender.
+ --]]
+ 
+ 
+local standard_train_wheels = data.raw["locomotive"]["locomotive"].wheels
+
+-- Copied from base game:
+-- {
+  -- priority = "very-low",
+  -- width = 115,
+  -- height = 115,
+  -- direction_count = 256,
+  -- filenames =
+  -- {
+    -- "__base__/graphics/entity/diesel-locomotive/train-wheels-01.png",
+    -- "__base__/graphics/entity/diesel-locomotive/train-wheels-02.png"
+  -- },
+  -- line_length = 8,
+  -- lines_per_file = 16,
+  -- hr_version =
+  -- {
+    -- priority = "very-low",
+    -- width = 229,
+    -- height = 227,
+    -- direction_count = 256,
+    -- filenames =
+    -- {
+      -- "__base__/graphics/entity/diesel-locomotive/hr-train-wheels-1.png",
+      -- "__base__/graphics/entity/diesel-locomotive/hr-train-wheels-2.png",
+      -- "__base__/graphics/entity/diesel-locomotive/hr-train-wheels-3.png",
+      -- "__base__/graphics/entity/diesel-locomotive/hr-train-wheels-4.png",
+      -- "__base__/graphics/entity/diesel-locomotive/hr-train-wheels-5.png",
+      -- "__base__/graphics/entity/diesel-locomotive/hr-train-wheels-6.png",
+      -- "__base__/graphics/entity/diesel-locomotive/hr-train-wheels-7.png",
+      -- "__base__/graphics/entity/diesel-locomotive/hr-train-wheels-8.png"
+    -- },
+    -- line_length = 4,
+    -- lines_per_file = 8,
+    -- --shift = {0.015625, -0.453125}, original shifting from spritesheeter (likely needs doubling or halving)
+    -- scale = 0.5
+  -- }
+-- }
 
 
-
-local standard_train_wheels =
-{
-  priority = "very-low",
-  width = 115,
-  height = 115,
-  direction_count = 256,
-  filenames =
-  {
-    "__base__/graphics/entity/diesel-locomotive/train-wheels-01.png",
-    "__base__/graphics/entity/diesel-locomotive/train-wheels-02.png"
-  },
-  line_length = 8,
-  lines_per_file = 16,
-  hr_version =
-  {
-    priority = "very-low",
-    width = 229,
-    height = 227,
-    direction_count = 256,
-    filenames =
-    {
-      "__base__/graphics/entity/diesel-locomotive/hr-train-wheels-1.png",
-      "__base__/graphics/entity/diesel-locomotive/hr-train-wheels-2.png",
-      "__base__/graphics/entity/diesel-locomotive/hr-train-wheels-3.png",
-      "__base__/graphics/entity/diesel-locomotive/hr-train-wheels-4.png",
-      "__base__/graphics/entity/diesel-locomotive/hr-train-wheels-5.png",
-      "__base__/graphics/entity/diesel-locomotive/hr-train-wheels-6.png",
-      "__base__/graphics/entity/diesel-locomotive/hr-train-wheels-7.png",
-      "__base__/graphics/entity/diesel-locomotive/hr-train-wheels-8.png"
-    },
-    line_length = 4,
-    lines_per_file = 8,
-    --shift = {0.015625, -0.453125}, original shifting from spritesheeter (likely needs doubling or halving)
-    scale = 0.5
-  }
-}
 
 local x12_train_wheels =
 {
@@ -51,7 +54,7 @@ local x12_train_wheels =
   direction_count = 128,
   filenames =
   {
-    "__X12NuclearLocomotive__/graphics/x12-nuclear-locomotive/Combined_Trucks.png"
+    "__X12NuclearLocomotive__/graphics/entities/x12-nuclear-locomotive/Combined_Trucks.png"
   },
   line_length = 4,
   lines_per_file = 32
@@ -62,52 +65,137 @@ local x12_train_wheels =
 
 local base_loco = data.raw["locomotive"]["locomotive"]
 
-local x12_nuclear_loco = optera_lib.copy_prototype(base_loco, "x12-nuclear-locomotive-powered")
-x12_nuclear_loco.icon = "__TrainOverhaul__/graphics/icons/nuclear-locomotive.png"
-x12_nuclear_loco.max_health = 3000
-x12_nuclear_loco.weight = 9000
-x12_nuclear_loco.max_speed = 1.4 --302.4km/h
---x12_nuclear_loco.max_speed = 1.2 --259.2km/h
-x12_nuclear_loco.max_power = "5000kW"
-x12_nuclear_loco.reversing_power_modifier = 1
-x12_nuclear_loco.braking_force = 40
-x12_nuclear_loco.friction_force = 0.50
-x12_nuclear_loco.air_resistance = 0.015
-x12_nuclear_loco.burner.fuel_category = "nuclear"
-x12_nuclear_loco.burner.effectivity = 0.85
-x12_nuclear_loco.burner.fuel_inventory_size = 1
-x12_nuclear_loco.burner.burnt_inventory_size = 1
-x12_nuclear_loco.burner.smoke = nil
-x12_nuclear_loco.working_sound.sound.filename = "__base__/sound/idle1.ogg"
-x12_nuclear_loco.working_sound.sound.volume = 1.3
-x12_nuclear_loco.working_sound.idle_sound = { filename = "__base__/sound/idle1.ogg", volume = 1.3 }
+local x12_powered = optera_lib.copy_prototype(base_loco, "x12-nuclear-locomotive-powered")
+x12_powered.icon = "__TrainOverhaul__/graphics/icons/nuclear-locomotive.png"
+x12_powered.minable = {mining_time = 1, result = "x12-nuclear-locomotive"}
+x12_powered.max_health = 3000
+x12_powered.weight = 9000
+x12_powered.max_speed = 1.4 --302.4km/h
+--x12_powered.max_speed = 1.2 --259.2km/h
+x12_powered.max_power = "5000kW"
+x12_powered.reversing_power_modifier = 1
+x12_powered.braking_force = 40
+x12_powered.friction_force = 0.50
+x12_powered.air_resistance = 0.015
 
-x12_nuclear_loco.front_light = nil
-x12_nuclear_loco.back_light = nil
-x12_nuclear_loco.stand_by_light = nil
-x12_nuclear_loco.color = nil
+x12_powered.burner =
+    {
+      fuel_category = "nuclear",
+      effectivity = 0.85,
+      fuel_inventory_size = 1,
+	  burnt_inventory_size = 1,
+      smoke =
+      {
+        {
+          name = "train-smoke",
+          deviation = {0.3, 0.3},
+          frequency = 50,
+          position = {0, 4},
+          starting_frame = 0,
+          starting_frame_deviation = 60,
+          height = 2,
+          height_deviation = 0.5,
+          starting_vertical_speed = 0.2,
+          starting_vertical_speed_deviation = 0.1
+        }
+      }
+    }
+	
+
+x12_powered.stop_trigger =
+    {
+      -- left side
+      {
+        type = "create-trivial-smoke",
+        repeat_count = 125,
+        smoke_name = "smoke-train-stop",
+        initial_height = 0,
+        -- smoke goes to the left
+        speed = {-0.03, 0},
+        speed_multiplier = 0.75,
+        speed_multiplier_deviation = 1.1,
+        offset_deviation = {{-0.75, -5.7}, {-0.3, -1.7}}
+      },
+	  {
+        type = "create-trivial-smoke",
+        repeat_count = 125,
+        smoke_name = "smoke-train-stop",
+        initial_height = 0,
+        -- smoke goes to the left
+        speed = {-0.03, 0},
+        speed_multiplier = 0.75,
+        speed_multiplier_deviation = 1.1,
+        offset_deviation = {{-0.75, 1.7}, {-0.3, 5.7}}
+      },
+      -- right side
+      {
+        type = "create-trivial-smoke",
+        repeat_count = 125,
+        smoke_name = "smoke-train-stop",
+        initial_height = 0,
+        -- smoke goes to the right
+        speed = {0.03, 0},
+        speed_multiplier = 0.75,
+        speed_multiplier_deviation = 1.1,
+        offset_deviation = {{0.3, -5.7}, {0.75, -1.7}}
+      },
+	  {
+        type = "create-trivial-smoke",
+        repeat_count = 125,
+        smoke_name = "smoke-train-stop",
+        initial_height = 0,
+        -- smoke goes to the right
+        speed = {0.03, 0},
+        speed_multiplier = 0.75,
+        speed_multiplier_deviation = 1.1,
+        offset_deviation = {{0.3,1.7}, {0.75, 5.7}}
+      },
+      {
+        type = "play-sound",
+        sound =
+        {
+          {
+            filename = "__base__/sound/train-breaks.ogg",
+            volume = 0.6
+          }
+        }
+      }
+    }
 
 
+x12_powered.working_sound.sound.filename = "__base__/sound/idle1.ogg"
+x12_powered.working_sound.sound.volume = 1.3
+x12_powered.working_sound.idle_sound = { filename = "__base__/sound/idle1.ogg", volume = 1 }
 
---x12_nuclear_loco.connection_distance = 3
---x12_nuclear_loco.joint_distance = 4
---x12_nuclear_loco.collision_box = {{-0.6, -2.6}, {0.6, 2.6}}
---x12_nuclear_loco.selection_box = {{-1, -3}, {1, 3}}
---x12_nuclear_loco.drawing_box = {{-1, -4}, {1, 3}}
---x12_nuclear_loco.drive_over_tie_trigger = drive_over_tie()
---x12_nuclear_loco.tie_distance = 50
 
-x12_nuclear_loco.connection_distance = 3
-x12_nuclear_loco.joint_distance = 11
+-- Fill these in once we have graphics that make sense.
+x12_powered.front_light = nil
+x12_powered.back_light = nil
+x12_powered.stand_by_light = nil
+x12_powered.color = nil
 
-x12_nuclear_loco.collision_box = {{-0.6, -6.1}, {0.6, 6.1}}
-x12_nuclear_loco.selection_box = {{-1, -6.5}, {1, 6.5}}
-x12_nuclear_loco.drawing_box = {{-1, -7.5}, {1, 6.5}}
 
---x12_nuclear_loco.wheels = x12_train_wheels
-x12_nuclear_loco.wheels = standard_train_wheels
+-- Default values for 6-long locomotive
+--x12_powered.connection_distance = 3
+--x12_powered.joint_distance = 4
+--x12_powered.collision_box = {{-0.6, -2.6}, {0.6, 2.6}}
+--x12_powered.selection_box = {{-1, -3}, {1, 3}}
+--x12_powered.drawing_box = {{-1, -4}, {1, 3}}
+--x12_powered.drive_over_tie_trigger = drive_over_tie()
+--x12_powered.tie_distance = 50
+
+-- New values for 13-long locomotive
+x12_powered.connection_distance = 3
+x12_powered.joint_distance = 11
+x12_powered.collision_box = {{-0.6, -6.1}, {0.6, 6.1}}
+x12_powered.selection_box = {{-1, -6.5}, {1, 6.5}}
+x12_powered.drawing_box = {{-1, -7.5}, {1, 6.5}}
+
+-- Switch these to use new truck sprites
+--x12_powered.wheels = x12_train_wheels
+x12_powered.wheels = standard_train_wheels
     
-x12_nuclear_loco.pictures =
+x12_powered.pictures =
     {
       layers =
       {
@@ -120,14 +208,7 @@ x12_nuclear_loco.pictures =
           allow_low_quality_rotation = true,
           filenames =
           {
-		  "__X12NuclearLocomotive__/graphics/x12-nuclear-locomotive/Combined_Sheets.png"
-            --"__X12NuclearLocomotive__/graphics/x12-nuclear-locomotive/Sheet01.png",
-            --"__X12NuclearLocomotive__/graphics/x12-nuclear-locomotive/Sheet02.png",
-			--"__X12NuclearLocomotive__/graphics/x12-nuclear-locomotive/Sheet03.png",
-			--"__X12NuclearLocomotive__/graphics/x12-nuclear-locomotive/Sheet04.png",
-			--"__X12NuclearLocomotive__/graphics/x12-nuclear-locomotive/Sheet05.png",
-			--"__X12NuclearLocomotive__/graphics/x12-nuclear-locomotive/Sheet06.png",
-			--"__X12NuclearLocomotive__/graphics/x12-nuclear-locomotive/Sheet07.png"
+			"__X12NuclearLocomotive__/graphics/entities/x12-nuclear-locomotive/Combined_Sheets.png"
           },
           line_length = 4,
           lines_per_file = 32,
@@ -143,11 +224,13 @@ x12_nuclear_loco.pictures =
 
 ---------
 -- Now modify it for the unpowered (default) version
-local x12_nuclear_loco_unpowered = optera_lib.copy_prototype(x12_nuclear_loco, "x12-nuclear-locomotive")
+local x12_unpowered = optera_lib.copy_prototype(x12_powered, "x12-nuclear-locomotive")
 
-x12_nuclear_loco_unpowered.max_power = "0kW"
-x12_nuclear_loco_unpowered.working_sound = nil
-
+x12_unpowered.max_power = "1kW"
+x12_unpowered.working_sound = nil
+x12_unpowered.minable = {mining_time = 1, result = "x12-nuclear-locomotive"}
+x12_unpowered.burner.smoke = nil
+x12_unpowered.stop_trigger = nil
 
 
 ----------
@@ -161,11 +244,11 @@ x12_nuclear_tender.max_health = 1500
 x12_nuclear_tender.weight = 4000
 x12_nuclear_tender.max_speed = 1.4
 x12_nuclear_tender.braking_force = 10
-x12_nuclear_tender.capacity = 25000
+x12_nuclear_tender.capacity = 10000
 --x12_nuclear_tender.connection_distance = 5
 
 data:extend({
-	x12_nuclear_loco,
-	x12_nuclear_loco_unpowered,
+	x12_powered,
+	x12_unpowered,
 	x12_nuclear_tender
 })

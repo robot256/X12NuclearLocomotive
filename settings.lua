@@ -1,7 +1,7 @@
 --[[ Copyright (c) 2019 robot256 (MIT License)
- * Project: Multiple Unit Train Control
+ * Project: X-12 Nuclear Locomotive
  * File: settings.lua
- * Description: Setting to control MU operation.
+ * Description: Setting to control X12 mod operation.
 --]]
 
 data:extend({
