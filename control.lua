@@ -48,6 +48,12 @@ local function InitEntityMaps()
 	global.x12_downgrade_pairs["x12-nuclear-locomotive-powered"] = "x12-nuclear-locomotive"
 	global.x12_tender_pairs["x12-nuclear-locomotive"] = "x12-nuclear-tender"
 	
+	-- Compatibility with Multiple Unit Train Control:
+	--   Only the powered loco will have an MU version.
+	--   MU versions that lose their tenders will be made non-MU.
+	global.x12_downgrade_pairs["x12-nuclear-locomotive-powered-mu"] = "x12-nuclear-locomotive"
+	
+	
 end
 
 

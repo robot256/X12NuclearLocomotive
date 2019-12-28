@@ -192,7 +192,7 @@ function processTrainX12(t)
 				end
 			end
 			
-			game.print("Found Unpowered Loco facing Back at index " .. loco_index)
+			--game.print("Found Unpowered Loco facing Back at index " .. loco_index)
 			
 			-- Look for its tender immediately behind
 			if carriages[loco_index-1] and carriages[loco_index-1].valid then
