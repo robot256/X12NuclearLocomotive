@@ -226,7 +226,7 @@ x12_powered.minimap_representation =
     {
       filename = "__X12NuclearLocomotive__/graphics/entities/x12_nuclear_locomotive/x12-locomotive-minimap-representation.png",
       flags = {"icon"},
-      size = {20, 86},
+      size = {20, 88},
       scale = 0.5
     }
 	
@@ -234,7 +234,7 @@ x12_powered.selected_minimap_representation =
     {
       filename = "__X12NuclearLocomotive__/graphics/entities/x12_nuclear_locomotive/x12-locomotive-selected-minimap-representation.png",
       flags = {"icon"},
-      size = {20, 86},
+      size = {20, 88},
       scale = 0.5
     }
 
