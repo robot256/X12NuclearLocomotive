@@ -208,10 +208,11 @@ x12_powered.pictures =
           allow_low_quality_rotation = true,
           filenames =
           {
-			"__X12NuclearLocomotive__/graphics/entities/x12_nuclear_locomotive/Combined_Sheets.png"
+			"__X12NuclearLocomotive__/graphics/entities/x12_nuclear_locomotive/Locomotive_01.png",
+			"__X12NuclearLocomotive__/graphics/entities/x12_nuclear_locomotive/Locomotive_02.png"
           },
           line_length = 4,
-          lines_per_file = 32,
+          lines_per_file = 16,
           shift = {0.0, -0.5},
           scale = 1.9
         }
