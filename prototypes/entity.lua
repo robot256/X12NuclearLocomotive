@@ -209,10 +209,12 @@ x12_powered.pictures =
           filenames =
           {
 			"__X12NuclearLocomotive__/graphics/entities/x12_nuclear_locomotive/Locomotive_01.png",
-			"__X12NuclearLocomotive__/graphics/entities/x12_nuclear_locomotive/Locomotive_02.png"
+			"__X12NuclearLocomotive__/graphics/entities/x12_nuclear_locomotive/Locomotive_02.png",
+			"__X12NuclearLocomotive__/graphics/entities/x12_nuclear_locomotive/Locomotive_03.png",
+			"__X12NuclearLocomotive__/graphics/entities/x12_nuclear_locomotive/Locomotive_04.png"
           },
           line_length = 4,
-          lines_per_file = 16,
+          lines_per_file = 8,
           shift = {0.0, -0.5},
           scale = 1.9
         }
