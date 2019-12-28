@@ -54,7 +54,7 @@ local x12_train_wheels =
   direction_count = 128,
   filenames =
   {
-    "__X12NuclearLocomotive__/graphics/entities/x12-nuclear-locomotive/Combined_Trucks.png"
+    "__X12NuclearLocomotive__/graphics/entities/x12_nuclear_locomotive/Combined_Trucks.png"
   },
   line_length = 4,
   lines_per_file = 32
@@ -208,7 +208,7 @@ x12_powered.pictures =
           allow_low_quality_rotation = true,
           filenames =
           {
-			"__X12NuclearLocomotive__/graphics/entities/x12-nuclear-locomotive/Combined_Sheets.png"
+			"__X12NuclearLocomotive__/graphics/entities/x12_nuclear_locomotive/Combined_Sheets.png"
           },
           line_length = 4,
           lines_per_file = 32,
@@ -218,6 +218,24 @@ x12_powered.pictures =
         
         
       }
+    }
+	
+	
+	
+x12_powered.minimap_representation =
+    {
+      filename = "__X12NuclearLocomotive__/graphics/entities/x12_nuclear_locomotive/x12-locomotive-minimap-representation.png",
+      flags = {"icon"},
+      size = {20, 86},
+      scale = 0.5
+    }
+	
+x12_powered.selected_minimap_representation =
+    {
+      filename = "__X12NuclearLocomotive__/graphics/entities/x12_nuclear_locomotive/x12-locomotive-selected-minimap-representation.png",
+      flags = {"icon"},
+      size = {20, 86},
+      scale = 0.5
     }
 
 
@@ -246,6 +264,34 @@ x12_nuclear_tender.max_speed = 1.4
 x12_nuclear_tender.braking_force = 10
 x12_nuclear_tender.capacity = 10000
 --x12_nuclear_tender.connection_distance = 5
+
+x12_nuclear_tender.stop_trigger =
+    {
+      -- left side
+      {
+        type = "create-trivial-smoke",
+        repeat_count = 125,
+        smoke_name = "smoke-train-stop",
+        initial_height = 0,
+        -- smoke goes to the left
+        speed = {-0.03, 0},
+        speed_multiplier = 0.75,
+        speed_multiplier_deviation = 1.1,
+        offset_deviation = {{-0.75, -2.7}, {-0.3, 2.7}}
+      },
+      -- right side
+      {
+        type = "create-trivial-smoke",
+        repeat_count = 125,
+        smoke_name = "smoke-train-stop",
+        initial_height = 0,
+        -- smoke goes to the right
+        speed = {0.03, 0},
+        speed_multiplier = 0.75,
+        speed_multiplier_deviation = 1.1,
+        offset_deviation = {{0.3, -2.7}, {0.75, 2.7}}
+      }
+	}
 
 data:extend({
 	x12_powered,
