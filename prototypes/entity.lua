@@ -215,7 +215,7 @@ x12_powered.pictures =
           },
           line_length = 4,
           lines_per_file = 8,
-          shift = {0.0, -0.5},
+          shift = {0.0, -.25},
           scale = 1.9
         }
         
