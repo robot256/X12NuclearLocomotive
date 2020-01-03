@@ -18,11 +18,9 @@
  *
  --]]
 
-require("util.mapBlueprint")
-require("util.saveItemRequestProxy")
-require("util.saveBurner")
-require("util.saveGrid")
-require("util.replaceLocomotive")
+replaceCarriage = require("__Robot256Lib__/script/carriage_replacement").replaceCarriage
+blueprintLib = require("__Robot256Lib__/script/blueprint_replacement")
+
 require("script.processTrainX12")
 require("script.addPairToGlobal")
 require("script.purgeLocoFromPairs")
@@ -69,7 +67,7 @@ local function ProcessReplacement(r)
 		end
 		local errorString = {"debug-message.x12-replacement-failed",r[1].name,r[1].backer_name,r[1].position.x,r[1].position.y}
 		
-		local newLoco = replaceLocomotive(r[1], r[2])
+		local newLoco = replaceCarriage(r[1], r[2])
 		-- Find which x12_pair the old one was in and put the new one instead
 		for _,p in pairs(global.x12_pairs) do
 			if p[1] == r[1] then
@@ -264,7 +262,7 @@ end
 --== ON_PLAYER_SETUP_BLUEPRINT EVENT ==--
 -- ID 68, fires when you select an area to make a blueprint or copy
 local function OnPlayerSetupBlueprint(event)
-	mapBlueprint(event,global.x12_downgrade_pairs)
+	blueprintLib.mapBlueprint(event,global.x12_downgrade_pairs)
 end
 
 
@@ -272,7 +270,7 @@ end
 -- Fires when player presses 'Q'.  We need to sneakily grab the correct item from inventory if it exists,
 --  or sneakily give the correct item in cheat mode.
 local function OnPlayerPipette(event)
-	mapPipette(event,global.x12_downgrade_pairs)
+	blueprintLib.mapPipette(event,global.x12_downgrade_pairs)
 end
 
 
@@ -317,26 +315,8 @@ local function init_events()
 end
 
 script.on_event(defines.events.on_runtime_mod_setting_changed, function(event)
-	--game.print("in mod_settings_changed!")
-	if event.setting == "multiple-unit-train-control-mode" then
-		settings_mode = settings.global["multiple-unit-train-control-mode"].value
-		-- Scrub existing trains according to new settings
-		QueueAllTrains()  -- This will execute some replacements immediately
-		if settings_mode == "disabled" then
-			-- Clean globals when disabled
-			global.x12_pairs = {}
-		end
-		-- Enable or disable events based on setting state
-		init_events()
-	
-	elseif event.setting == "multiple-unit-train-control-on_nth_tick" then
-		-- When interval changes, clear the saved update rate and start over
-		settings_nth_tick = settings.global["multiple-unit-train-control-on_nth_tick"].value
-		global.current_nth_tick = nil
-		StartBalanceUpdates()
-	
-	elseif event.setting == "multiple-unit-train-control-debug" then
-		settings_debug = settings.global["multiple-unit-train-control-debug"].value
+	if event.setting == "x12-nuclear-locomotive-debug" then
+		settings_debug = settings.global["x12-nuclear-locomotive-debug"].value
 		
 	end
 	

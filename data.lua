@@ -3,8 +3,6 @@
  * File: data.lua
  * Description: Adds prototypes for entites, items, recipes and technology.
  --]]
- 
-local optera_lib = require ("__OpteraLib__.data.utilities")
 
 require ("prototypes.technology")
 require ("prototypes.recipe")
