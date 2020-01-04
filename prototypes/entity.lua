@@ -202,8 +202,8 @@ x12_powered.pictures =
         {
           slice = 4,
           priority = "very-low",
-          width = 238,
-          height = 230,
+          width = 476,
+          height = 460,
           direction_count = 128,
           allow_low_quality_rotation = true,
           filenames =
@@ -216,7 +216,7 @@ x12_powered.pictures =
           line_length = 4,
           lines_per_file = 8,
           shift = {0.0, -.25},
-          scale = 1.9
+          scale = 0.95
         }
         
         
@@ -295,7 +295,35 @@ x12_nuclear_tender.stop_trigger =
         offset_deviation = {{0.3, -2.7}, {0.75, 2.7}}
       }
 	}
-
+	
+x12_nuclear_tender.pictures =
+    {
+      layers =
+      {
+        {
+          slice = 4,
+          priority = "very-low",
+          width = 238,
+          height = 230,
+          direction_count = 128,
+          allow_low_quality_rotation = true,
+          filenames =
+          {
+			"__X12NuclearLocomotive__/graphics/entities/x12_nuclear_tender/Tender_01.png",
+			"__X12NuclearLocomotive__/graphics/entities/x12_nuclear_tender/Tender_02.png",
+			"__X12NuclearLocomotive__/graphics/entities/x12_nuclear_tender/Tender_03.png",
+			"__X12NuclearLocomotive__/graphics/entities/x12_nuclear_tender/Tender_04.png"
+          },
+          line_length = 4,
+          lines_per_file = 8,
+          shift = {0.0, -1.125},
+          scale = 0.95
+        }
+        
+        
+      }
+    }
+	
 data:extend({
 	x12_powered,
 	x12_unpowered,
