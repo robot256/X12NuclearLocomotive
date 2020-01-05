@@ -26,14 +26,12 @@ require("script.addPairToGlobal")
 require("script.purgeLocoFromPairs")
 
 
+local steam_per_second = settings.global["x12-nuclear-locomotive-steam_per_second"].value
 local settings_debug = settings.global["x12-nuclear-locomotive-debug"].value
 local settings_nth_tick = settings.global["x12-nuclear-locomotive-on_nth_tick"].value
 local current_nth_tick = settings_nth_tick
 
 local train_queue_semaphore = false
-
--- steam per tick
-local steam_per_second = 60
 
 
 ------------------------- GLOBAL TABLE INITIALIZATION ---------------------------------------
@@ -384,7 +382,7 @@ end
 --   Safe to run inside on_load().
 local function StartSteamUpdates()
 
-	if settings_nth_tick == 0 or settings_mode == "disabled" then
+	if settings_nth_tick == 0 or settings_mode == "disabled" or steam_per_second == 0 then
 		-- Value of zero disables steam creation
 		--game.print("Disabling Nth Tick due to setting")
 		script.on_nth_tick(nil)
@@ -454,6 +452,8 @@ script.on_event(defines.events.on_runtime_mod_setting_changed, function(event)
 		settings_nth_tick = settings.global["x12-nuclear-locomotive-on_nth_tick"].value
 		global.current_nth_tick = nil
 		StartSteamUpdates()
+  elseif event.setting == "x12-nuclear-locomotive-steam_per_second" then
+    steam_per_second = settings.global["x12-nuclear-locomotive-steam_per_second"].value
 	end
 	
 end)

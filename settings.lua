@@ -14,6 +14,14 @@ data:extend({
     default_value = 30
   },
   {
+    type = "int-setting",
+    name = "x12-nuclear-locomotive-steam_per_second",
+    order = "ab",
+    setting_type = "runtime-global",
+    minimum_value = 0,
+    default_value = 60
+  },
+  {
     type = "string-setting",
     name = "x12-nuclear-locomotive-debug",
     order = "ac",
