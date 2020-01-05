@@ -11,7 +11,7 @@ data:extend({
     order = "ab",
     setting_type = "runtime-global",
     minimum_value = 0,
-    default_value = 2
+    default_value = 30
   },
   {
     type = "string-setting",

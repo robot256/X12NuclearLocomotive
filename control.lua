@@ -33,7 +33,7 @@ local current_nth_tick = settings_nth_tick
 local train_queue_semaphore = false
 
 -- steam per tick
-local steam_supply = 60*10
+local steam_per_second = 60
 
 
 ------------------------- GLOBAL TABLE INITIALIZATION ---------------------------------------
@@ -239,7 +239,8 @@ function GenerateSteam(p)
   end
   if burner.currently_burning then
     -- Add hot steam
-    local steamAdded = tender.insert_fluid{name="steam",amount=steam_supply,temperature=500}
+    local steamWanted = steam_per_second*current_nth_tick/60
+    local steamAdded = tender.insert_fluid{name="steam",amount=steamWanted,temperature=500}
     -- Remove burner fuel
     local heatWanted = steamAdded*97000 -- Joules per unit steam
     game.print("wanted="..heatWanted.."; burner.remaining_burning_fuel ="..burner.remaining_burning_fuel )
