@@ -237,53 +237,57 @@ function GenerateSteam(p)
                         amount=tender.prototype.fluid_capacity, 
                         maximum_temperature=499.9}
   end
+  
+  
+  -- Add hot steam
+  local steamWanted = steam_per_second*current_nth_tick/60
+  local steamAdded = tender.insert_fluid{name="steam",amount=steamWanted,temperature=500}
+  local heatWanted = steamAdded*97000 -- Joules per unit steam
+  
+  -- Check if there is existing fuel burning
   if burner.currently_burning then
-    -- Add hot steam
-    local steamWanted = steam_per_second*current_nth_tick/60
-    local steamAdded = tender.insert_fluid{name="steam",amount=steamWanted,temperature=500}
     -- Remove burner fuel
-    local heatWanted = steamAdded*97000 -- Joules per unit steam
-    game.print("wanted="..heatWanted.."; burner.remaining_burning_fuel ="..burner.remaining_burning_fuel )
-    if burner.remaining_burning_fuel >= heatWanted then
-      burner.remaining_burning_fuel = burner.remaining_burning_fuel - heatWanted
-    else
-      heatWanted = heatWanted - burner.remaining_burning_fuel
-      -- Get the used up fuel cell and see if we can insert it
+    local heatUsed = math.min(burner.remaining_burning_fuel, heatWanted)
+    burner.remaining_burning_fuel = burner.remaining_burning_fuel - heatUsed
+    heatWanted = heatWanted - heatUsed
+    if burner.remaining_burning_fuel == 0 then
+      -- See if we need to insert burnt fuel
       if burner.currently_burning.burnt_result then
-        if burner.burnt_result_inventory.insert{name=burner.currently_burning.burnt_result.name} > 0 then
-          -- Burnt Result inserted successfully!
-          -- Now see if we have any fuel to add
-          name,count = next(burner.inventory.get_contents())
-          if name then
-            burner.inventory.remove{name=name, count=1}  -- remove one fuel
-            fuel_item = game.item_prototypes[name]  -- get fuel item prototype
-            burner.currently_burning = fuel_item
-            burner.remaining_burning_fuel = fuel_item.fuel_value - heatWanted
-          else
-            -- No new fuel to burn
-            burner.remaining_burning_fuel = 0
-          end
-        else
-          -- Burnt result not inserted, can't burn new fuel
-          burner.remaining_burning_fuel = 0
+        local burnt_inserted = burner.burnt_result_inventory.insert{name=burner.currently_burning.burnt_result.name}
+        if burnt_inserted > 0 then
+          -- We got the burnt cell out, now nothing is burning
+          burner.currently_burning = nil
         end
       else
-        -- No burnt result to worry about, just add fuel
-        -- Now see if we have any fuel to add
-        name,count = next(burner.inventory.get_contents())
-        if name then
-          burner.inventory.remove{name=name, count=1}  -- remove one fuel
-          fuel_item = game.item_prototypes[name]  -- get fuel item prototype
-          burner.currently_burning = fuel_item
-          burner.remaining_burning_fuel = fuel_item.fuel_value - heatWanted
-        else
-          -- No new fuel to burn
-          burner.remaining_burning_fuel = 0
-        end
+        -- No burnt result, we are now burning nothing
+        burner.currently_burning = nil
       end
     end
-    
   end
+  
+  -- Check if we still need more fuel
+  if heatWanted > 0 then
+    -- Now see if we can insert new fuel from inventory
+    name,count = next(burner.inventory.get_contents())
+    if name then
+      fuel_item = game.item_prototypes[name]  -- get fuel item prototype
+      -- Check that we will be able to insert the burnt result when it is done, or that there is no burnt result
+      if not (fuel_item.burnt_result and not burner.burnt_result_inventory.can_insert{name=fuel_item.burnt_result.name}) then
+        burner.inventory.remove{name=name, count=1}  -- remove one fuel
+        burner.currently_burning = fuel_item
+        burner.remaining_burning_fuel = fuel_item.fuel_value - heatWanted
+        heatWanted = 0
+      end
+    end
+  end
+  
+  -- Check if we came up short energy-wise
+  if heatWanted > 0 then
+    -- Remove steam that we couldn't produce
+    local excessSteam = heatWanted/97000
+    tender.remove_fluid{name="steam", amount=excessSteam}
+  end
+  
 end
 
 
