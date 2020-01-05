@@ -58,8 +58,55 @@ local x12_train_wheels =
   },
   line_length = 4,
   lines_per_file = 32
-  
 }
+
+
+function rolling_stock_back_light(length)
+  if not length then length = 6 end
+  return
+  {
+    {
+      minimum_darkness = 0.3,
+      color = { r = 1, g = 0.1, b = 0.05, a = 0 },
+      shift = {-0.6, ((length+1)/2)},
+      size = 2,
+      intensity = 0.6,
+      add_perspective = true
+    },
+    {
+      minimum_darkness = 0.3,
+      color = { r = 1, g = 0.1, b = 0.05, a = 0 },
+      shift = {0.6, ((length+1)/2)},
+      size = 2,
+      intensity = 0.6,
+      add_perspective = true
+    }
+  }
+end
+
+function rolling_stock_stand_by_light(length)
+  if not length then length = 6 end
+  return
+  {
+    {
+      minimum_darkness = 0.3,
+      color = { r = 0.05, g = 0.2, b = 1, a = 0 },
+      shift = {-0.6, -((length+1)/2)},
+      size = 2,
+      intensity = 0.5,
+      add_perspective = true
+    },
+    {
+      minimum_darkness = 0.3,
+      color = { r = 0.05, g = 0.2, b = 1, a = 0 },
+      shift = {0.6, -((length+1)/2)},
+      size = 2,
+      intensity = 0.5,
+      add_perspective = true
+    }
+  }
+end
+
 
 
 
@@ -83,24 +130,24 @@ x12_powered.burner =
       fuel_category = "nuclear",
       effectivity = 0.85,
       fuel_inventory_size = 1,
-	  burnt_inventory_size = 1,
+      burnt_inventory_size = 1,
       smoke =
       {
         {
-          name = "train-smoke",
+          name = "turbine-smoke",
           deviation = {0.3, 0.3},
-          frequency = 50,
-          position = {0, 4},
+          frequency = 60,
+          position = {0.2, 5.7},
           starting_frame = 0,
           starting_frame_deviation = 60,
           height = 2,
           height_deviation = 0.5,
-          starting_vertical_speed = 0.2,
+          starting_vertical_speed = 0.15,
           starting_vertical_speed_deviation = 0.1
         }
       }
     }
-	
+  
 
 x12_powered.stop_trigger =
     {
@@ -116,7 +163,7 @@ x12_powered.stop_trigger =
         speed_multiplier_deviation = 1.1,
         offset_deviation = {{-0.75, -5.7}, {-0.3, -1.7}}
       },
-	  {
+    {
         type = "create-trivial-smoke",
         repeat_count = 125,
         smoke_name = "smoke-train-stop",
@@ -139,7 +186,7 @@ x12_powered.stop_trigger =
         speed_multiplier_deviation = 1.1,
         offset_deviation = {{0.3, -5.7}, {0.75, -1.7}}
       },
-	  {
+    {
         type = "create-trivial-smoke",
         repeat_count = 125,
         smoke_name = "smoke-train-stop",
@@ -169,10 +216,48 @@ x12_powered.working_sound.idle_sound = { filename = "__base__/sound/idle1.ogg", 
 
 
 -- Fill these in once we have graphics that make sense.
-x12_powered.front_light = nil
-x12_powered.back_light = nil
-x12_powered.stand_by_light = nil
 x12_powered.color = nil
+
+
+x12_powered.front_light =
+    {
+      {
+        type = "oriented",
+        minimum_darkness = 0.3,
+        picture =
+        {
+          filename = "__core__/graphics/light-cone.png",
+          priority = "extra-high",
+          flags = { "light" },
+          scale = 2,
+          width = 200,
+          height = 200
+        },
+        shift = {-0.8, -25},
+        size = 3,
+        intensity = 0.8,
+        color = {r = 1.0, g = 0.9, b = 0.9}
+      },
+      {
+        type = "oriented",
+        minimum_darkness = 0.3,
+        picture =
+        {
+          filename = "__core__/graphics/light-cone.png",
+          priority = "extra-high",
+          flags = { "light" },
+          scale = 2,
+          width = 200,
+          height = 200
+        },
+        shift = {0.8, -25},
+        size = 3  ,
+        intensity = 0.8,
+        color = {r = 1.0, g = 0.9, b = 0.9}
+      }
+    }
+x12_powered.back_light = rolling_stock_back_light(13)
+x12_powered.stand_by_light = rolling_stock_stand_by_light(13)
 
 
 -- Default values for 6-long locomotive
@@ -208,10 +293,10 @@ x12_powered.pictures =
           allow_low_quality_rotation = true,
           filenames =
           {
-			"__X12NuclearLocomotive__/graphics/entities/x12_nuclear_locomotive/Locomotive_01.png",
-			"__X12NuclearLocomotive__/graphics/entities/x12_nuclear_locomotive/Locomotive_02.png",
-			"__X12NuclearLocomotive__/graphics/entities/x12_nuclear_locomotive/Locomotive_03.png",
-			"__X12NuclearLocomotive__/graphics/entities/x12_nuclear_locomotive/Locomotive_04.png"
+            "__X12NuclearLocomotive__/graphics/entities/x12_nuclear_locomotive/Locomotive_01.png",
+            "__X12NuclearLocomotive__/graphics/entities/x12_nuclear_locomotive/Locomotive_02.png",
+            "__X12NuclearLocomotive__/graphics/entities/x12_nuclear_locomotive/Locomotive_03.png",
+            "__X12NuclearLocomotive__/graphics/entities/x12_nuclear_locomotive/Locomotive_04.png"
           },
           line_length = 4,
           lines_per_file = 8,
@@ -222,9 +307,9 @@ x12_powered.pictures =
         
       }
     }
-	
-	
-	
+  
+  
+  
 x12_powered.minimap_representation =
     {
       filename = "__X12NuclearLocomotive__/graphics/entities/x12_nuclear_locomotive/x12-locomotive-minimap-representation.png",
@@ -232,7 +317,7 @@ x12_powered.minimap_representation =
       size = {20, 88},
       scale = 0.5
     }
-	
+  
 x12_powered.selected_minimap_representation =
     {
       filename = "__X12NuclearLocomotive__/graphics/entities/x12_nuclear_locomotive/x12-locomotive-selected-minimap-representation.png",
@@ -294,8 +379,8 @@ x12_nuclear_tender.stop_trigger =
         speed_multiplier_deviation = 1.1,
         offset_deviation = {{0.3, -2.7}, {0.75, 2.7}}
       }
-	}
-	
+  }
+  
 x12_nuclear_tender.pictures =
     {
       layers =
@@ -309,23 +394,21 @@ x12_nuclear_tender.pictures =
           allow_low_quality_rotation = true,
           filenames =
           {
-			"__X12NuclearLocomotive__/graphics/entities/x12_nuclear_tender/Tender_01.png",
-			"__X12NuclearLocomotive__/graphics/entities/x12_nuclear_tender/Tender_02.png",
-			"__X12NuclearLocomotive__/graphics/entities/x12_nuclear_tender/Tender_03.png",
-			"__X12NuclearLocomotive__/graphics/entities/x12_nuclear_tender/Tender_04.png"
+            "__X12NuclearLocomotive__/graphics/entities/x12_nuclear_tender/Tender_01.png",
+            "__X12NuclearLocomotive__/graphics/entities/x12_nuclear_tender/Tender_02.png",
+            "__X12NuclearLocomotive__/graphics/entities/x12_nuclear_tender/Tender_03.png",
+            "__X12NuclearLocomotive__/graphics/entities/x12_nuclear_tender/Tender_04.png"
           },
           line_length = 4,
           lines_per_file = 8,
           shift = {0.0, -1.125},
           scale = 0.95
         }
-        
-        
       }
     }
-	
+  
 data:extend({
-	x12_powered,
-	x12_unpowered,
-	x12_nuclear_tender
+  x12_powered,
+  x12_unpowered,
+  x12_nuclear_tender
 })
