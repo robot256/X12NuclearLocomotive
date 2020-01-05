@@ -56,7 +56,7 @@ function processTrainX12(t)
 					-- Potential twin, make sure it's not in a pair already
 					local tender_free = true
 					for _,this_pair in pairs(found_pairs) do
-						if this_pair[1] == tender or this_pair[2] == tender then  -- (tender is always member of a pair)
+						if this_pair[2] == tender then  -- (tender is always member of a pair)
 							tender_free = false
 							break
 						end
@@ -103,7 +103,7 @@ function processTrainX12(t)
 					-- Potential twin, make sure it's not in a pair already
 					local tender_free = true
 					for _,this_pair in pairs(found_pairs) do
-						if this_pair[1] == tender or this_pair[2] == tender then
+						if this_pair[2] == tender then
 							tender_free = false
 							break
 						end
@@ -155,7 +155,7 @@ function processTrainX12(t)
 					-- Potential twin, make sure it's not in a pair already
 					local tender_free = true
 					for _,this_pair in pairs(found_pairs) do
-						if this_pair[1] == tender or this_pair[2] == tender then  -- (tender is always member of a pair)
+						if this_pair[2] == tender then  -- (tender is always 2nd member of a pair)
 							tender_free = false
 							break
 						end
@@ -202,7 +202,7 @@ function processTrainX12(t)
 					-- Potential twin, make sure it's not in a pair already
 					local tender_free = true
 					for _,this_pair in pairs(found_pairs) do
-						if this_pair[1] == tender or this_pair[2] == tender then
+						if this_pair[2] == tender then
 							tender_free = false
 							break
 						end

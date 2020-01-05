@@ -27,8 +27,13 @@ require("script.purgeLocoFromPairs")
 
 
 local settings_debug = settings.global["x12-nuclear-locomotive-debug"].value
+local settings_nth_tick = settings.global["x12-nuclear-locomotive-on_nth_tick"].value
+local current_nth_tick = settings_nth_tick
 
 local train_queue_semaphore = false
+
+-- steam per tick
+local steam_supply = 60*10
 
 
 ------------------------- GLOBAL TABLE INITIALIZATION ---------------------------------------
@@ -216,6 +221,102 @@ local function ProcessTrainQueue()
 end
 
 
+----------
+-- Try to generate steam in the tender by consuming nuclear fuel
+function GenerateSteam(p)
+  -- Just add steam every tick for now
+  local burner = p[1].burner
+  local tender = p[2]
+  -- Purge non-steam liquids
+  local contents = tender.get_fluid_contents()
+  if table_size(contents) > 0 and not contents["steam"] then
+    tender.clear_fluid_inside()  -- Remove non-steam liquids
+  else
+    -- Remove cold steam (no other way to see temperature contents???
+    tender.remove_fluid{name="steam", 
+                        amount=tender.prototype.fluid_capacity, 
+                        maximum_temperature=499.9}
+  end
+  if burner.currently_burning then
+    -- Add hot steam
+    local steamAdded = tender.insert_fluid{name="steam",amount=steam_supply,temperature=500}
+    -- Remove burner fuel
+    local heatWanted = steamAdded*97000 -- Joules per unit steam
+    game.print("wanted="..heatWanted.."; burner.remaining_burning_fuel ="..burner.remaining_burning_fuel )
+    if burner.remaining_burning_fuel >= heatWanted then
+      burner.remaining_burning_fuel = burner.remaining_burning_fuel - heatWanted
+    else
+      heatWanted = heatWanted - burner.remaining_burning_fuel
+      -- Get the used up fuel cell and see if we can insert it
+      if burner.currently_burning.burnt_result then
+        if burner.burnt_result_inventory.insert{name=burner.currently_burning.burnt_result.name} > 0 then
+          -- Burnt Result inserted successfully!
+          -- Now see if we have any fuel to add
+          name,count = next(burner.inventory.get_contents())
+          if name then
+            burner.inventory.remove{name=name, count=1}  -- remove one fuel
+            fuel_item = game.item_prototypes[name]  -- get fuel item prototype
+            burner.currently_burning = fuel_item
+            burner.remaining_burning_fuel = fuel_item.fuel_value - heatWanted
+          else
+            -- No new fuel to burn
+            burner.remaining_burning_fuel = 0
+          end
+        else
+          -- Burnt result not inserted, can't burn new fuel
+          burner.remaining_burning_fuel = 0
+        end
+      else
+        -- No burnt result to worry about, just add fuel
+        -- Now see if we have any fuel to add
+        name,count = next(burner.inventory.get_contents())
+        if name then
+          burner.inventory.remove{name=name, count=1}  -- remove one fuel
+          fuel_item = game.item_prototypes[name]  -- get fuel item prototype
+          burner.currently_burning = fuel_item
+          burner.remaining_burning_fuel = fuel_item.fuel_value - heatWanted
+        else
+          -- No new fuel to burn
+          burner.remaining_burning_fuel = 0
+        end
+      end
+    end
+    
+  end
+end
+
+
+--== ON_NTH_TICK EVENT ==--
+-- Process steam generation and standby heat consumption
+local function OnNthTick(event)
+  if global.x12_pairs and next(global.x12_pairs) then
+    local n = #global.x12_pairs
+		local done = false
+		for i=1,n do
+      entry = global.x12_pairs[i]
+      if (entry[1] and entry[2] and entry[1].valid and entry[2].valid) then
+			  -- Add steam only if train is stopped
+        if entry[1].train.speed==0 then
+          GenerateSteam(entry)
+        end
+      else
+				-- This pair has one or more invalid locomotives, or they don't have burners at all, remove it from the list
+				global.x12_pairs[i] = nil
+			end
+    end
+    local j=0
+		for i=1,n do  -- Condense the list
+			if global.x12_pairs[i] ~= nil then
+				j = j+1
+				global.x12_pairs[j] = global.x12_pairs[i]
+			end
+		end
+		for i=j+1,n do
+			global.x12_pairs[i] = nil
+		end
+	end
+end
+
 
 --== ONTICK EVENT ==--
 -- Process items queued up by other actions
@@ -232,7 +333,7 @@ local function OnTick(event)
 		--game.print("Turning off OnTick")
 		script.on_event(defines.events.on_tick, nil)
 	end
-	
+  
 end
 
 
@@ -273,6 +374,29 @@ local function OnPlayerPipette(event)
 	blueprintLib.mapPipette(event,global.x12_downgrade_pairs)
 end
 
+-------------
+-- Enables the on_nth_tick event according to the mod setting value
+--   Safe to run inside on_load().
+local function StartSteamUpdates()
+
+	if settings_nth_tick == 0 or settings_mode == "disabled" then
+		-- Value of zero disables steam creation
+		--game.print("Disabling Nth Tick due to setting")
+		script.on_nth_tick(nil)
+	else
+		-- See if we stored a longer update rate in global
+		if global.current_nth_tick and global.current_nth_tick > settings_nth_tick then
+			current_nth_tick = global.current_nth_tick
+		else
+			current_nth_tick = settings_nth_tick
+		end
+		-- Start the event
+		--game.print("Enabling Nth Tick with setting " .. settings_nth_tick)
+		script.on_nth_tick(nil)
+		script.on_nth_tick(current_nth_tick, OnNthTick)
+	end
+end
+
 
 -----------
 -- Queues all existing trains for updating with new settings
@@ -299,7 +423,10 @@ local function init_events()
 	script.on_event({defines.events.on_player_setup_blueprint,defines.events.on_player_configured_blueprint}, OnPlayerSetupBlueprint)
 	script.on_event(defines.events.on_player_pipette, OnPlayerPipette)
 	
-	-- Subscribe to On_Train_Changed_state according to global queue
+	-- Subscribe to On_Nth_Tick according to saved global and settings
+	StartSteamUpdates()
+	
+  -- Subscribe to On_Train_Changed_state according to global queue
 	StartTrainWatcher()
 	
 	-- Subscribe to On_Train_Created according to mod enabled setting
@@ -317,7 +444,11 @@ end
 script.on_event(defines.events.on_runtime_mod_setting_changed, function(event)
 	if event.setting == "x12-nuclear-locomotive-debug" then
 		settings_debug = settings.global["x12-nuclear-locomotive-debug"].value
-		
+	elseif event.setting == "x12-nuclear-locomotive-on_nth_tick" then
+		-- When interval changes, clear the saved update rate and start over
+		settings_nth_tick = settings.global["x12-nuclear-locomotive-on_nth_tick"].value
+		global.current_nth_tick = nil
+		StartSteamUpdates()
 	end
 	
 end)

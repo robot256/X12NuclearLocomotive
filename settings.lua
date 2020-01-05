@@ -5,13 +5,20 @@
 --]]
 
 data:extend({
-  
+  {
+    type = "int-setting",
+    name = "x12-nuclear-locomotive-on_nth_tick",
+    order = "ab",
+    setting_type = "runtime-global",
+    minimum_value = 0,
+    default_value = 2
+  },
   {
     type = "string-setting",
-	name = "x12-nuclear-locomotive-debug",
-	order = "ac",
-	setting_type = "runtime-global",
-	default_value = "info",
-	allowed_values = {"none","error","info"}
+    name = "x12-nuclear-locomotive-debug",
+    order = "ac",
+    setting_type = "runtime-global",
+    default_value = "info",
+    allowed_values = {"none","error","info"}
   },
 })

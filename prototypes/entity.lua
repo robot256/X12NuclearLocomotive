@@ -350,7 +350,7 @@ x12_nuclear_tender.max_health = 1500
 x12_nuclear_tender.weight = 4000
 x12_nuclear_tender.max_speed = 1.4
 x12_nuclear_tender.braking_force = 10
-x12_nuclear_tender.capacity = 10000
+x12_nuclear_tender.capacity = 1000
 --x12_nuclear_tender.connection_distance = 5
 
 x12_nuclear_tender.stop_trigger =
